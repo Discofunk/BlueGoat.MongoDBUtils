@@ -21,6 +21,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include=".github\workflows\publish.yml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MinVer" Version="5.0.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="MongoDB.Driver" Version="2.*" />
     <PackageReference Include="MongoDBMigrations" Version="2.*" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
