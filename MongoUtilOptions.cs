@@ -1,6 +1,6 @@
 ﻿using System.CommandLine;
 
-namespace MongoDBUtils
+namespace BlueGoat.MongoDBUtils
 {
     public static  class MongoUtilOptions
     {

@@ -2,7 +2,7 @@
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace MongoDBUtils;
+namespace BlueGoat.MongoDBUtils;
 
 public class LoadScenarioCommand : Command
 {

@@ -5,6 +5,17 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <EnablePackageValidation>true</EnablePackageValidation>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Authors>Mike Rowley</Authors>
+    <Description>A DotNet Tool to help manage some common MongoDB tasks during development such as running migrations and saving and loading test scenario data</Description>
+    <PackageTags>dotnet, tool, mongodb</PackageTags>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>BlueGoat.png</PackageIcon>
+
   </PropertyGroup>
 
   <PropertyGroup>
@@ -15,6 +26,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="LICENSE" Pack="true" PackagePath="" />
+    <None Include="README.md" Pack="true" PackagePath=""/>
+    <None Include="BlueGoat.png" Pack="true" PackagePath=""/>
+  </ItemGroup>
+  <ItemGroup>
     <Content Include=".config\dotnet-tools.json" />
   </ItemGroup>
 
@@ -23,6 +39,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="DotNet.ReproducibleBuilds" Version="1.1.1">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="MinVer" Version="5.0.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>

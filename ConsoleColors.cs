@@ -1,4 +1,4 @@
-﻿namespace MongoDBUtils
+﻿namespace BlueGoat.MongoDBUtils
 {
     public static class ConsoleEx
     {

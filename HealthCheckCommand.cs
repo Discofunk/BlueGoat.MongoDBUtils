@@ -3,7 +3,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.IO;
 using MongoDB.Driver;
 
-namespace MongoDBUtils
+namespace BlueGoat.MongoDBUtils
 {
     public class HealthCheckCommand : Command
     {

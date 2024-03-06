@@ -1,7 +1,7 @@
 ﻿using System.CommandLine;
 using System.Reflection;
 
-namespace MongoDBUtils;
+namespace BlueGoat.MongoDBUtils;
 
 public class MigrationCommand : Command
 {

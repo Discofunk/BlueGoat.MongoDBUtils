@@ -1,7 +1,7 @@
 ﻿using System.CommandLine;
 using System.Diagnostics;
 
-namespace MongoDBUtils;
+namespace BlueGoat.MongoDBUtils;
 
 public class Program
 {

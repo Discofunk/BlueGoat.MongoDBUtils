@@ -2,7 +2,7 @@
 using MongoDBMigrations;
 using MongoDBMigrations.Core;
 
-namespace MongoDBUtils
+namespace BlueGoat.MongoDBUtils
 {
     public class MigrationRunner
     {

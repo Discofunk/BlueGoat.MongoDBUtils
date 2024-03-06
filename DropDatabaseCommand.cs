@@ -1,7 +1,7 @@
 ﻿using System.CommandLine;
 using MongoDB.Driver;
 
-namespace MongoDBUtils;
+namespace BlueGoat.MongoDBUtils;
 
 public class DropDatabaseCommand : Command
 {

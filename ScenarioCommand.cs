@@ -1,6 +1,6 @@
 ﻿using System.CommandLine;
 
-namespace MongoDBUtils;
+namespace BlueGoat.MongoDBUtils;
 
 public class ScenarioCommand : Command
 {
