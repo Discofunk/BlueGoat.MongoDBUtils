@@ -15,14 +15,14 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>BlueGoat.png</PackageIcon>
-
+    <PackageProjectUrl>https://github.com/Discofunk/MongoDBUtils</PackageProjectUrl>
   </PropertyGroup>
 
   <PropertyGroup>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>mongo-utils</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
-    <PackageId>mongo-utils</PackageId>
+    <PackageId>BlueGoat.MongoUtils</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
