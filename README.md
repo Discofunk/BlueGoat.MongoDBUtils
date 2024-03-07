@@ -1,6 +1,6 @@
 # BlueGoat Mongo Utils
 
-This .NET Tool allows for development time management of a MongoDB database including:
+This .NET Tool provides some utilities that can be useful during a project's development phase when working with MongoDB and can do the following:
 
 - Dropping a DB
 - Checking the health of a DB
@@ -11,7 +11,7 @@ As testing aid, you can save the current state of the DB as a scenario JSON file
 
 > ⚠ Warning: This is not intended as a way to back up / restore large amounts of data but rather manage various light-weight scenarios for a small amount of data. The scenario commands will attempt to dump / restore the entire DB using an inefficient JSON file format.
 
-This is a work in progress and has not had any production exposure but I thought I would share it as I thought might be useful for me.
+This is a work in progress and has not had any production exposure but I thought I would share it as it has been useful for me.
 
 ### Thanks
 

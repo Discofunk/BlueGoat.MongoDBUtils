@@ -15,7 +15,7 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>BlueGoat.png</PackageIcon>
-    <PackageProjectUrl>https://github.com/Discofunk/MongoDBUtils</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/Discofunk/BlueGoat.MongoDBUtils</PackageProjectUrl>
   </PropertyGroup>
 
   <PropertyGroup>
