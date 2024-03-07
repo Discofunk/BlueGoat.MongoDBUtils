@@ -1,4 +1,4 @@
-﻿# Mongo Utils
+# Mongo Utils
 
 This is a work in progress and has not had any production exposure.  It was made as a tool that I thought might be useful for me.
 
