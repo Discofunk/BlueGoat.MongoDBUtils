@@ -6,10 +6,12 @@ namespace BlueGoat.MongoDBUtils.Commands;
 public class LoadScenarioCommand : Command
 {
     private readonly IMongoClientFactory clientFactory;
+    private readonly IConsole console;
 
-    public LoadScenarioCommand(IMongoClientFactory clientFactory) : base("load", "Load scenario from disk")
+    public LoadScenarioCommand(IMongoClientFactory clientFactory, IConsole console) : base("load", "Load scenario from disk")
     {
         this.clientFactory = clientFactory;
+        this.console = console;
         AddOption(MongoUtilOptions.DatabaseName);
         AddOption(MongoUtilOptions.InFilePath);
         AddOption(MongoUtilOptions.ForceOption);
@@ -20,13 +22,13 @@ public class LoadScenarioCommand : Command
     {
         if (!filePath.Exists)
         {
-            ConsoleEx.WriteLineError($"File {filePath} does not exist");
+            console.WriteLineError($"File {filePath} does not exist");
             return;
         }
 
         if (!force && filePath.Length > Parameters.LargeFileSizeWarningThresholdBytes)
         {
-            ConsoleEx.WriteWarn($"The selected file is larger than {Parameters.LargeFileSizeWarningThresholdInMegaBytes}MB and may result in long loading time or timeouts.  Continue? [Y]es / [N]o: ");
+            console.WriteWarn($"The selected file is larger than {Parameters.LargeFileSizeWarningThresholdInMegaBytes}MB and may result in long loading time or timeouts.  Continue? [Y]es / [N]o: ");
             var response = Console.ReadLine()?.ToUpper();
             if (response != "Y") return;
         }
@@ -46,7 +48,7 @@ public class LoadScenarioCommand : Command
                 var collectionCount = collection.EstimatedDocumentCount();
                 if (collectionCount > 0)
                 {
-                    ConsoleEx.WriteWarn($"Collection \"{collectionName}\" contains existing data. Delete existing data first? [Y]es / [N]o / [A]ll: ");
+                    console.WriteWarn($"Collection \"{collectionName}\" contains existing data. Delete existing data first? [Y]es / [N]o / [A]ll: ");
                     var response = Console.ReadLine()?.ToUpper();
                     if (response == "A")
                     {
@@ -61,9 +63,9 @@ public class LoadScenarioCommand : Command
                 if (dataArray.Count == 0) continue;
                 var documents = dataArray.ToList();
                 collection.InsertMany(documents.ConvertAll(x => (BsonDocument)x));
-                ConsoleEx.WriteLineInfo($"Loaded {documents.Count()} into \"{collectionName}\"");
+                console.WriteLineInfo($"Loaded {documents.Count()} into \"{collectionName}\"");
             }
         }
-        ConsoleEx.WriteLineOk("Scenario Load Completed");
+        console.WriteLineOk("Scenario Load Completed");
     }
 }

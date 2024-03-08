@@ -7,10 +7,12 @@ namespace BlueGoat.MongoDBUtils.Commands
     public class HealthCheckCommand : Command
     {
         private readonly HealthService healthService;
+        private readonly IConsole console;
 
-        public HealthCheckCommand(HealthService healthService) : base("health", "Runs a Health Check against a MongoDB instance")
+        public HealthCheckCommand(HealthService healthService, IConsole console) : base("health", "Runs a Health Check against a MongoDB instance")
         {
             this.healthService = healthService;
+            this.console = console;
             AddOption(MongoUtilOptions.DatabaseName);
             this.SetHandler(HealthCheck, MongoUtilOptions.Connection, MongoUtilOptions.DatabaseName);
         }
@@ -19,8 +21,8 @@ namespace BlueGoat.MongoDBUtils.Commands
         {
             var stats = healthService.GetDbStats(connection, databaseName);
             var pretty = stats.ToJson(new JsonWriterSettings() { Indent = true });
-            ConsoleEx.WriteLineOk($"Connected!");
-            ConsoleEx.WriteLine(pretty);
+            console.WriteLineOk($"Connected!");
+            console.WriteLine(pretty);
         }
     }
 }

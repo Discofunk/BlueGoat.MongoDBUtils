@@ -4,7 +4,7 @@ namespace BlueGoat.MongoDBUtils.Commands
 {
     public class MongoUtilsRootCommand : RootCommand
     {
-        public MongoUtilsRootCommand(IMongoClientFactory clientFactory, IMigrationRunner migrationRunner) : base("MongoDB Utilities")
+        public MongoUtilsRootCommand(IMongoClientFactory clientFactory, IMigrationRunner migrationRunner, IConsole console) : base("MongoDB Utilities")
         {
             Name = "mongo-utils";
 
@@ -13,14 +13,14 @@ namespace BlueGoat.MongoDBUtils.Commands
             TreatUnmatchedTokensAsErrors = true;
 
             var healthService = new HealthService(clientFactory);
-            var migrationCommand = new MigrationCommand(migrationRunner);
-            var dropDatabaseCommand = new DropDatabaseCommand(clientFactory);
+            var migrationCommand = new MigrationCommand(migrationRunner, console);
+            var dropDatabaseCommand = new DropDatabaseCommand(clientFactory, console);
 
             Add(migrationCommand);
             Add(dropDatabaseCommand);
             Add(new ResetDatabaseCommand(dropDatabaseCommand, migrationCommand));
-            Add(new HealthCheckCommand(healthService));
-            Add(new ScenarioCommand(clientFactory, healthService));
+            Add(new HealthCheckCommand(healthService, console));
+            Add(new ScenarioCommand(clientFactory, healthService, console));
         }
 
         public sealed override string Name
