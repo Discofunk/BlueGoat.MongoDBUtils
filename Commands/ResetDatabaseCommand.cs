@@ -1,6 +1,6 @@
 ﻿using System.CommandLine;
 
-namespace BlueGoat.MongoDBUtils;
+namespace BlueGoat.MongoDBUtils.Commands;
 
 public class ResetDatabaseCommand : Command
 {

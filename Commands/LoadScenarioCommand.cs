@@ -2,7 +2,7 @@
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace BlueGoat.MongoDBUtils;
+namespace BlueGoat.MongoDBUtils.Commands;
 
 public class LoadScenarioCommand : Command
 {
@@ -14,7 +14,7 @@ public class LoadScenarioCommand : Command
         this.SetHandler(LoadScenario, MongoUtilOptions.Connection, MongoUtilOptions.DatabaseName, MongoUtilOptions.InFilePath, MongoUtilOptions.ForceOption);
     }
 
-    private void LoadScenario(string connection, string databaseName, FileInfo filePath, bool forceDeleteCollectionData)
+    private void LoadScenario(string connection, string databaseName, FileInfo filePath, bool force)
     {
         if (!filePath.Exists)
         {
@@ -22,8 +22,15 @@ public class LoadScenarioCommand : Command
             return;
         }
 
+        if (!force && filePath.Length > Parameters.LargeFileSizeWarningThresholdBytes)
+        {
+            ConsoleEx.WriteWarn($"The selected file is larger than {Parameters.LargeFileSizeWarningThresholdInMegaBytes}MB and may result in long loading time or timeouts.  Continue? [Y]es / [N]o: ");
+            var response = Console.ReadLine()?.ToUpper();
+            if (response != "Y") return;
+        }
+
         var client = new MongoClient(connection);
-        
+
         var db = client.GetDatabase(databaseName);
         var rawBsonAsJson = File.ReadAllText(filePath.FullName);
         var document = BsonDocument.Parse(rawBsonAsJson);
@@ -32,7 +39,7 @@ public class LoadScenarioCommand : Command
             var collectionName = element.Name;
             var data = element.Value;
             var collection = db.GetCollection<BsonDocument>(collectionName);
-            if (!forceDeleteCollectionData)
+            if (!force)
             {
                 var collectionCount = collection.EstimatedDocumentCount();
                 if (collectionCount > 0)
@@ -41,7 +48,7 @@ public class LoadScenarioCommand : Command
                     var response = Console.ReadLine()?.ToUpper();
                     if (response == "A")
                     {
-                        forceDeleteCollectionData = true;
+                        force = true;
                     }
                     else if (response != "Y") continue;
                 }

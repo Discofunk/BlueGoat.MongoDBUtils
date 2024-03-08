@@ -1,5 +1,6 @@
 ﻿using System.CommandLine;
 using System.Diagnostics;
+using BlueGoat.MongoDBUtils.Commands;
 
 namespace BlueGoat.MongoDBUtils;
 
@@ -26,8 +27,23 @@ public class Program
 
         rootCommand.TreatUnmatchedTokensAsErrors = true;
 
-        var result = await rootCommand.InvokeAsync(args);
-        Console.ResetColor();
-        return result;
+        try
+        {
+            var result = await rootCommand.InvokeAsync(args);
+            return result;
+        }
+        catch (CommandException ex)
+        {
+            ConsoleEx.WriteError(ex.Message);
+            return 0;
+        }
+        catch (Exception ex)
+        {
+            ConsoleEx.WriteError("Error executing command: " + ex.Message);
+        }
+        finally
+        {
+            Console.ResetColor();
+        }
     }
 }
