@@ -1,7 +1,7 @@
 ﻿using System.CommandLine;
 using MongoDB.Driver;
 
-namespace BlueGoat.MongoDBUtils;
+namespace BlueGoat.MongoDBUtils.Commands;
 
 public class DropDatabaseCommand : Command
 {
@@ -9,7 +9,7 @@ public class DropDatabaseCommand : Command
     {
         AddOption(MongoUtilOptions.DatabaseName);
         AddOption(MongoUtilOptions.ForceOption);
-        this.SetHandler((connection, databaseName, force) => DropDatabase(connection, databaseName, force), 
+        this.SetHandler((connection, databaseName, force) => DropDatabase(connection, databaseName, force),
             MongoUtilOptions.Connection, MongoUtilOptions.DatabaseName, MongoUtilOptions.ForceOption);
     }
 

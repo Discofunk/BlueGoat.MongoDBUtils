@@ -17,7 +17,9 @@ namespace BlueGoat.MongoDBUtils
             Connection.AddAlias("-c");
             DatabaseName.AddAlias("-db");
             Version.AddAlias("-v");
-            OutFilePath.AddAlias("-f");
+            OutFilePath.AddAlias("-out");
+            InFilePath.AddAlias("-in");
+            ForceOption.AddAlias("-f");
             MigrationAssembly.AddAlias("-ma");
         }
 
