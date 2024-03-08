@@ -6,10 +6,12 @@ namespace BlueGoat.MongoDBUtils.Commands;
 public class MigrationCommand : Command
 {
     private readonly IMigrationRunner migrationRunner;
+    private readonly IConsole console;
 
-    public MigrationCommand(IMigrationRunner migrationRunner) : base("migrate", "Run MongoDB migration")
+    public MigrationCommand(IMigrationRunner migrationRunner, IConsole console) : base("migrate", "Run MongoDB migration")
     {
         this.migrationRunner = migrationRunner;
+        this.console = console;
         AddOption(MongoUtilOptions.DatabaseName);
         AddOption(MongoUtilOptions.Version);
         AddOption(MongoUtilOptions.MigrationAssembly);
@@ -19,8 +21,8 @@ public class MigrationCommand : Command
     internal void RunMigration(string connection, string databaseName, FileInfo migrationAssemblyPath, string? version = null)
     {
         var assembly = Assembly.LoadFrom(migrationAssemblyPath.FullName);
-        migrationRunner.RunMigrations(assembly, connection, databaseName, version, progressAction: result => Console.WriteLine($"Running {result.CurrentNumber} of {result.TotalCount}: {result.MigrationName}"));
-        Console.WriteLine($"Migrations Run");
+        migrationRunner.RunMigrations(assembly, connection, databaseName, version, progressAction: result => console.WriteLine($"Running {result.CurrentNumber} of {result.TotalCount}: {result.MigrationName}"));
+        console.WriteLine($"Migrations Run");
     }
 
 }

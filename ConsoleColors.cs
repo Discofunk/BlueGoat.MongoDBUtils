@@ -1,15 +1,14 @@
 ﻿namespace BlueGoat.MongoDBUtils
 {
-    public static class ConsoleEx
+    public class ConsoleEx : IConsole
     {
-
-        public static void WriteLine(string? message)
+        public void WriteLine(string? message)
         {
             Console.ResetColor();
             Console.WriteLine(message);
         }
 
-        public static void WriteLineOk(string? message)
+        public void WriteLineOk(string? message)
         {
             Console.ResetColor();
             Console.ForegroundColor = ConsoleColor.Green;
@@ -17,7 +16,7 @@
             Console.ResetColor();
         }
 
-        public static void WriteLineInfo(string? message)
+        public void WriteLineInfo(string? message)
         {
             Console.ResetColor();
             Console.ForegroundColor = ConsoleColor.Blue;
@@ -25,7 +24,7 @@
             Console.ResetColor();
         }
 
-        public static void WriteLineError(string? message)
+        public void WriteLineError(string? message)
         {
             Console.ResetColor();
             Console.ForegroundColor = ConsoleColor.Red;
@@ -33,7 +32,7 @@
             Console.ResetColor();
         }
 
-        public static void WriteLineWarn(string? message)
+        public void WriteLineWarn(string? message)
         {
             Console.ResetColor();
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -41,13 +40,13 @@
             Console.ResetColor();
         }
 
-        public static void Write(string? message)
+        public void Write(string? message)
         {
             Console.ResetColor();
             Console.Write(message);
         }
 
-        public static void WriteOk(string? message)
+        public void WriteOk(string? message)
         {
             Console.ResetColor();
             Console.ForegroundColor = ConsoleColor.Green;
@@ -55,7 +54,7 @@
             Console.ResetColor();
         }
 
-        public static void WriteInfo(string? message)
+        public void WriteInfo(string? message)
         {
             Console.ResetColor();
             Console.ForegroundColor = ConsoleColor.Blue;
@@ -63,7 +62,7 @@
             Console.ResetColor();
         }
 
-        public static void WriteError(string? message)
+        public void WriteError(string? message)
         {
             Console.ResetColor();
             Console.ForegroundColor = ConsoleColor.Red;
@@ -71,7 +70,7 @@
             Console.ResetColor();
         }
 
-        public static void WriteWarn(string? message)
+        public void WriteWarn(string? message)
         {
             Console.ResetColor();
             Console.ForegroundColor = ConsoleColor.Yellow;

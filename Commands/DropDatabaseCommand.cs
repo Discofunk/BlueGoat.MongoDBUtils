@@ -5,10 +5,12 @@ namespace BlueGoat.MongoDBUtils.Commands;
 public class DropDatabaseCommand : Command
 {
     private readonly IMongoClientFactory clientFactory;
+    private readonly IConsole console;
 
-    public DropDatabaseCommand(IMongoClientFactory clientFactory) : base("drop", "Drop a MongoDB database")
+    public DropDatabaseCommand(IMongoClientFactory clientFactory, IConsole console) : base("drop", "Drop a MongoDB database")
     {
         this.clientFactory = clientFactory;
+        this.console = console;
         AddOption(MongoUtilOptions.DatabaseName);
         AddOption(MongoUtilOptions.ForceOption);
         this.SetHandler((connection, databaseName, force) => DropDatabase(connection, databaseName, force),
@@ -19,7 +21,7 @@ public class DropDatabaseCommand : Command
     {
         if (!force)
         {
-            ConsoleEx.WriteWarn($"Dropping database will permanently delete all data. Are you sure you want to continue? [Y]es / [N]o: ");
+            console.WriteWarn($"Dropping database will permanently delete all data. Are you sure you want to continue? [Y]es / [N]o: ");
             var response = Console.ReadLine()?.ToUpper();
             if (response != "Y") return false;
         }
