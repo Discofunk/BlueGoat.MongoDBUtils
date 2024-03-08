@@ -7,8 +7,13 @@ namespace BlueGoat.MongoDBUtils.Commands;
 
 public class SaveScenarioCommand : Command
 {
-    public SaveScenarioCommand() : base("save", "Export current DB state as a scenario to disk")
+    private readonly IMongoClientFactory clientFactory;
+    private readonly HealthService healthService;
+
+    public SaveScenarioCommand(IMongoClientFactory clientFactory, HealthService healthService) : base("save", "Export current DB state as a scenario to disk")
     {
+        this.clientFactory = clientFactory;
+        this.healthService = healthService;
         AddOption(MongoUtilOptions.DatabaseName);
         AddOption(MongoUtilOptions.OutFilePath);
         this.SetHandler(SaveScenario, MongoUtilOptions.Connection, MongoUtilOptions.DatabaseName, MongoUtilOptions.OutFilePath, MongoUtilOptions.ForceOption);
@@ -18,7 +23,7 @@ public class SaveScenarioCommand : Command
     {
         ConsoleEx.WriteLine("Save Scenario Started");
 
-        var dbSize = HealthService.GetSize(connection, databaseName);
+        var dbSize = healthService.GetSize(connection, databaseName);
         if (!force && dbSize > Parameters.LargeFileSizeWarningThresholdBytes)
         {
             ConsoleEx.WriteWarn($"The database size is larger than {Parameters.LargeFileSizeWarningThresholdInMegaBytes}MB and may result in long save times or timeouts.  Continue? [Y]es / [N]o: ");
@@ -34,7 +39,7 @@ public class SaveScenarioCommand : Command
             filePath.Delete();
         }
 
-        var client = new MongoClient(connection);
+        var client = clientFactory.GetClient(connection);
         var db = client.GetDatabase(databaseName);
         var options = new ListCollectionNamesOptions()
         {

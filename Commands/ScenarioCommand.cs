@@ -4,9 +4,9 @@ namespace BlueGoat.MongoDBUtils.Commands;
 
 public class ScenarioCommand : Command
 {
-    public ScenarioCommand() : base("scenario", "Scenario Commands")
+    public ScenarioCommand(IMongoClientFactory clientFactory, HealthService healthService) : base("scenario", "Scenario Commands")
     {
-        AddCommand(new SaveScenarioCommand());
-        AddCommand(new LoadScenarioCommand());
+        AddCommand(new SaveScenarioCommand(clientFactory, healthService));
+        AddCommand(new LoadScenarioCommand(clientFactory));
     }
 }

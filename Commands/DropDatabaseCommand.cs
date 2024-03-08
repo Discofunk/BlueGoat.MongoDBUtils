@@ -1,19 +1,21 @@
 ﻿using System.CommandLine;
-using MongoDB.Driver;
 
 namespace BlueGoat.MongoDBUtils.Commands;
 
 public class DropDatabaseCommand : Command
 {
-    public DropDatabaseCommand() : base("drop", "Drop a MongoDB database")
+    private readonly IMongoClientFactory clientFactory;
+
+    public DropDatabaseCommand(IMongoClientFactory clientFactory) : base("drop", "Drop a MongoDB database")
     {
+        this.clientFactory = clientFactory;
         AddOption(MongoUtilOptions.DatabaseName);
         AddOption(MongoUtilOptions.ForceOption);
         this.SetHandler((connection, databaseName, force) => DropDatabase(connection, databaseName, force),
             MongoUtilOptions.Connection, MongoUtilOptions.DatabaseName, MongoUtilOptions.ForceOption);
     }
 
-    internal static bool DropDatabase(string connection, string databaseName, bool force)
+    internal bool DropDatabase(string connection, string databaseName, bool force)
     {
         if (!force)
         {
@@ -22,7 +24,7 @@ public class DropDatabaseCommand : Command
             if (response != "Y") return false;
         }
 
-        var client = new MongoClient(connection);
+        var client = clientFactory.GetClient(connection);
         client.DropDatabase(databaseName);
         Console.WriteLine($"Database {databaseName} dropped");
         return true;
