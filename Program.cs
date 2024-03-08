@@ -13,7 +13,7 @@ public class Program
             Debugger.Launch();
         }
 
-        var rootCommand = new MongoUtilsRootCommand(new MongoClientFactory(), new MigrationRunner());
+        var rootCommand = new MongoUtilsRootCommand(new MongoClientFactory(), new MigrationRunner(), new ConsoleEx());
 
         try
         {
