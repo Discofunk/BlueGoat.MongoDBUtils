@@ -4,8 +4,13 @@ namespace BlueGoat.MongoDBUtils.Commands;
 
 public class ResetDatabaseCommand : Command
 {
-    public ResetDatabaseCommand() : base("reset", "Drop database and run all migrations")
+    private readonly DropDatabaseCommand dropDatabaseCommand;
+    private readonly MigrationCommand migrationCommand;
+
+    public ResetDatabaseCommand(DropDatabaseCommand dropDatabaseCommand, MigrationCommand migrationCommand) : base("reset", "Drop database and run all migrations")
     {
+        this.dropDatabaseCommand = dropDatabaseCommand;
+        this.migrationCommand = migrationCommand;
         AddOption(MongoUtilOptions.DatabaseName);
         AddOption(MongoUtilOptions.ForceOption);
         AddOption(MongoUtilOptions.MigrationAssembly);
@@ -14,7 +19,7 @@ public class ResetDatabaseCommand : Command
 
     private void ResetDatabase(string connection, string databaseName, bool force, FileInfo migrationAssemblyPath)
     {
-        if (!DropDatabaseCommand.DropDatabase(connection, databaseName, force)) return;
-        MigrationCommand.RunMigration(connection, databaseName, migrationAssemblyPath);
+        if (!dropDatabaseCommand.DropDatabase(connection, databaseName, force)) return;
+        migrationCommand.RunMigration(connection, databaseName, migrationAssemblyPath);
     }
 }

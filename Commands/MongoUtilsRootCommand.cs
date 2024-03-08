@@ -4,7 +4,7 @@ namespace BlueGoat.MongoDBUtils.Commands
 {
     public class MongoUtilsRootCommand : RootCommand
     {
-        public MongoUtilsRootCommand() : base("MongoDB Utilities")
+        public MongoUtilsRootCommand(IMongoClientFactory clientFactory, IMigrationRunner migrationRunner) : base("MongoDB Utilities")
         {
             Name = "mongo-utils";
 
@@ -12,11 +12,15 @@ namespace BlueGoat.MongoDBUtils.Commands
             AddGlobalOption(new Option<bool>("--debug") { IsHidden = true });
             TreatUnmatchedTokensAsErrors = true;
 
-            Add(new MigrationCommand());
-            Add(new DropDatabaseCommand());
-            Add(new ResetDatabaseCommand());
-            Add(new HealthCheckCommand());
-            Add(new ScenarioCommand());
+            var healthService = new HealthService(clientFactory);
+            var migrationCommand = new MigrationCommand(migrationRunner);
+            var dropDatabaseCommand = new DropDatabaseCommand(clientFactory);
+
+            Add(migrationCommand);
+            Add(dropDatabaseCommand);
+            Add(new ResetDatabaseCommand(dropDatabaseCommand, migrationCommand));
+            Add(new HealthCheckCommand(healthService));
+            Add(new ScenarioCommand(clientFactory, healthService));
         }
 
         public sealed override string Name

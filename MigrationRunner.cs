@@ -4,7 +4,13 @@ using MongoDBMigrations.Core;
 
 namespace BlueGoat.MongoDBUtils
 {
-    public class MigrationRunner
+    public interface IMigrationRunner
+    {
+        void RunMigrations(Assembly migrationsAssembly, string connectionString, string databaseName, string? version = null, Action<InterimMigrationResult>? progressAction = null);
+    }
+
+
+    public class MigrationRunner : IMigrationRunner
     {
         public void RunMigrations(Assembly migrationsAssembly, string connectionString, string databaseName, string? version = null, Action<InterimMigrationResult>? progressAction = null)
         {

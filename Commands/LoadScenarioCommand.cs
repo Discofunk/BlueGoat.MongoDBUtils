@@ -1,13 +1,15 @@
 ﻿using System.CommandLine;
 using MongoDB.Bson;
-using MongoDB.Driver;
 
 namespace BlueGoat.MongoDBUtils.Commands;
 
 public class LoadScenarioCommand : Command
 {
-    public LoadScenarioCommand() : base("load", "Load scenario from disk")
+    private readonly IMongoClientFactory clientFactory;
+
+    public LoadScenarioCommand(IMongoClientFactory clientFactory) : base("load", "Load scenario from disk")
     {
+        this.clientFactory = clientFactory;
         AddOption(MongoUtilOptions.DatabaseName);
         AddOption(MongoUtilOptions.InFilePath);
         AddOption(MongoUtilOptions.ForceOption);
@@ -29,7 +31,7 @@ public class LoadScenarioCommand : Command
             if (response != "Y") return;
         }
 
-        var client = new MongoClient(connection);
+        var client = clientFactory.GetClient(connection);
 
         var db = client.GetDatabase(databaseName);
         var rawBsonAsJson = File.ReadAllText(filePath.FullName);

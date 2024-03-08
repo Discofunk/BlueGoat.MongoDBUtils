@@ -5,11 +5,18 @@ namespace BlueGoat.MongoDBUtils
 {
     public class HealthService
     {
-        public static IDictionary<string,object> GetDbStats(string connection, string databaseName)
+        private readonly IMongoClientFactory clientFactory;
+
+        public HealthService(IMongoClientFactory clientFactory)
+        {
+            this.clientFactory = clientFactory;
+        }
+
+        public IDictionary<string,object> GetDbStats(string connection, string databaseName)
         {
             try
             {
-                var client = new MongoClient(connection);
+                var client = clientFactory.GetClient(connection);
                 var db = client.GetDatabase(databaseName);
                 var stats = db.RunCommand<BsonDocument>("{ dbStats: 1}");
                 return stats.ToDictionary();
@@ -24,7 +31,7 @@ namespace BlueGoat.MongoDBUtils
             }
         }
 
-        public static long GetSize(string connection, string databaseName)
+        public long GetSize(string connection, string databaseName)
         {
             var stats = GetDbStats(connection, databaseName);
             var size = (decimal) Convert.ChangeType(stats["dataSize"], typeof(decimal));
