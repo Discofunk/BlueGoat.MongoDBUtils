@@ -1,4 +1,5 @@
 ﻿using System.CommandLine;
+using System.Resources;
 using MongoDB.Bson;
 using MongoDB.Bson.IO;
 using MongoDB.Driver;
@@ -35,6 +36,7 @@ public class SaveScenarioCommand : Command
 
         if (!force && filePath.Exists)
         {
+            
             console.WriteWarn($"File {filePath} already exists. Overwrite? [Y]es /[N]o: ");
             var overWriteInput = Console.ReadLine()?.ToUpper();
             if (overWriteInput != "Y") return;
