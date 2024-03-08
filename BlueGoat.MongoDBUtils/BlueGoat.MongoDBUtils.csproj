@@ -26,22 +26,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove=".config\**" />
+    <Compile Remove=".github\**" />
     <Compile Remove="nupkg\**" />
+    <EmbeddedResource Remove=".config\**" />
+    <EmbeddedResource Remove=".github\**" />
     <EmbeddedResource Remove="nupkg\**" />
+    <None Remove=".config\**" />
+    <None Remove=".github\**" />
     <None Remove="nupkg\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="LICENSE" Pack="true" PackagePath="" />
-    <None Include="README.md" Pack="true" PackagePath="" />
-    <None Include="BlueGoat.png" Pack="true" PackagePath="" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include=".config\dotnet-tools.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include=".github\workflows\publish.yml" />
   </ItemGroup>
 
   <ItemGroup>
