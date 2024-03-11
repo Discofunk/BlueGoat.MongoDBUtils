@@ -36,7 +36,7 @@ namespace BlueGoat.MongoDBUtils.Test.Unit.Commands
                 {
                   "Message" : "Hello Health Check"
                 }
-                """;
+                """.ReplaceLineEndings();
             database.RunCommand(HealthService.DbHealthCheckCommand).Returns(BsonDocument.Parse(healthCheckMessage));
             var expectedOutput = new[]
             {
