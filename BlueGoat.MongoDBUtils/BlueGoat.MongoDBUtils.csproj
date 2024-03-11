@@ -55,6 +55,12 @@
     <InternalsVisibleTo Include="BlueGoat.MongoDBUtils.Test.Unit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\LICENSE" Pack="true" PackagePath=""/>
+    <None Include="..\README.md" Pack="true" PackagePath=""/>
+    <None Include="..\BlueGoat.png" Pack="true" PackagePath=""/>
+  </ItemGroup>
+
   <Target Name="PostClean" AfterTargets="Clean">
     <RemoveDir Directories="$(BaseIntermediateOutputPath)" /><!-- obj -->
     <RemoveDir Directories="$(BaseOutputPath)" /><!-- bin -->
