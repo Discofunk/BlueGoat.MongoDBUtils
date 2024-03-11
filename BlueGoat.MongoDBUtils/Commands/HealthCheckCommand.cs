@@ -22,7 +22,7 @@ namespace BlueGoat.MongoDBUtils.Commands
             var stats = healthService.GetDbStats(connection, databaseName);
             var pretty = stats.ToJson(new JsonWriterSettings() { Indent = true });
             console.WriteLineOk($"Connected!");
-            console.WriteLine(pretty);
+            console.WriteLine(pretty.ReplaceLineEndings());
             return Result.Success;
         }
     }
