@@ -12,4 +12,5 @@ public interface IConsole
     void WriteInfo(string? message);
     void WriteError(string? message);
     void WriteWarn(string? message);
+    string? ReadLine();
 }

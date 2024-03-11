@@ -51,6 +51,10 @@
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="BlueGoat.MongoDBUtils.Test.Unit" />
+  </ItemGroup>
+
   <Target Name="PostClean" AfterTargets="Clean">
     <RemoveDir Directories="$(BaseIntermediateOutputPath)" /><!-- obj -->
     <RemoveDir Directories="$(BaseOutputPath)" /><!-- bin -->
