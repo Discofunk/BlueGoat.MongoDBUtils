@@ -41,7 +41,7 @@ namespace BlueGoat.MongoDBUtils.Test.Unit.Commands
             var expectedOutput = new[]
             {
                 "Connected!",
-                healthCheckMessage
+                healthCheckMessage.ReplaceLineEndings()
             };
 
             //Act
