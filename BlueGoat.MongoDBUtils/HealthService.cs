@@ -6,6 +6,7 @@ namespace BlueGoat.MongoDBUtils
     public class HealthService
     {
         private readonly IMongoClientFactory clientFactory;
+        internal static JsonCommand<BsonDocument> DbHealthCheckCommand = new("{ dbStats: 1}");
 
         public HealthService(IMongoClientFactory clientFactory)
         {
@@ -18,7 +19,7 @@ namespace BlueGoat.MongoDBUtils
             {
                 var client = clientFactory.GetClient(connection);
                 var db = client.GetDatabase(databaseName);
-                var stats = db.RunCommand<BsonDocument>("{ dbStats: 1}");
+                var stats = db.RunCommand(DbHealthCheckCommand);
                 return stats.ToDictionary();
             }
             catch (MongoAuthenticationException)

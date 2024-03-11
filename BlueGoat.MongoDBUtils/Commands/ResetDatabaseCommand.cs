@@ -14,12 +14,17 @@ public class ResetDatabaseCommand : Command
         AddOption(MongoUtilOptions.DatabaseName);
         AddOption(MongoUtilOptions.ForceOption);
         AddOption(MongoUtilOptions.MigrationAssembly);
-        this.SetHandler(ResetDatabase, MongoUtilOptions.Connection, MongoUtilOptions.DatabaseName, MongoUtilOptions.ForceOption, MongoUtilOptions.MigrationAssembly);
+        this.SetHandler((connection, databaseName, force, migrationAssembly) => 
+            ResetDatabase(connection, databaseName, force, migrationAssembly), 
+            MongoUtilOptions.Connection, MongoUtilOptions.DatabaseName, MongoUtilOptions.ForceOption, MongoUtilOptions.MigrationAssembly
+        );
     }
 
-    private void ResetDatabase(string connection, string databaseName, bool force, FileInfo migrationAssemblyPath)
+    private Result ResetDatabase(string connection, string databaseName, bool force, FileInfo migrationAssemblyPath)
     {
-        if (!dropDatabaseCommand.DropDatabase(connection, databaseName, force)) return;
-        migrationCommand.RunMigration(connection, databaseName, migrationAssemblyPath);
+        var dropResult = dropDatabaseCommand.DropDatabase(connection, databaseName, force);
+        return dropResult != Result.Success ? 
+            dropResult : 
+            migrationCommand.RunMigration(connection, databaseName, migrationAssemblyPath);
     }
 }

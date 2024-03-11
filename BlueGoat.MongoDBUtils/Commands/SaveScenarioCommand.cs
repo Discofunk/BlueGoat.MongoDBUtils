@@ -3,6 +3,7 @@ using System.Resources;
 using MongoDB.Bson;
 using MongoDB.Bson.IO;
 using MongoDB.Driver;
+using SharpCompress.Common;
 
 namespace BlueGoat.MongoDBUtils.Commands;
 
@@ -19,10 +20,13 @@ public class SaveScenarioCommand : Command
         this.console = console;
         AddOption(MongoUtilOptions.DatabaseName);
         AddOption(MongoUtilOptions.OutFilePath);
-        this.SetHandler(SaveScenario, MongoUtilOptions.Connection, MongoUtilOptions.DatabaseName, MongoUtilOptions.OutFilePath, MongoUtilOptions.ForceOption);
+        this.SetHandler((connection, databaseName, filePath, force) => 
+            SaveScenario(connection, databaseName, filePath, force), 
+            MongoUtilOptions.Connection, MongoUtilOptions.DatabaseName, MongoUtilOptions.OutFilePath, MongoUtilOptions.ForceOption
+        );
     }
 
-    private void SaveScenario(string connection, string databaseName, FileInfo filePath, bool force)
+    private Result SaveScenario(string connection, string databaseName, FileInfo filePath, bool force)
     {
         console.WriteLine("Save Scenario Started");
 
@@ -30,16 +34,15 @@ public class SaveScenarioCommand : Command
         if (!force && dbSize > Parameters.LargeFileSizeWarningThresholdBytes)
         {
             console.WriteWarn($"The database size is larger than {Parameters.LargeFileSizeWarningThresholdInMegaBytes}MB and may result in long save times or timeouts.  Continue? [Y]es / [N]o: ");
-            var response = Console.ReadLine()?.ToUpper();
-            if (response != "Y") return;
+            var response = console.ReadLine()?.ToUpper();
+            if (response != "Y") return Result.Cancelled;
         }
 
         if (!force && filePath.Exists)
         {
-            
             console.WriteWarn($"File {filePath} already exists. Overwrite? [Y]es /[N]o: ");
-            var overWriteInput = Console.ReadLine()?.ToUpper();
-            if (overWriteInput != "Y") return;
+            var overWriteInput = console.ReadLine()?.ToUpper();
+            if (overWriteInput != "Y") return Result.Cancelled;
             filePath.Delete();
         }
 
@@ -72,5 +75,6 @@ public class SaveScenarioCommand : Command
 
         console.WriteLineOk($"Scenario Saved");
         console.WriteLine(filePath.ToString());
+        return Result.Success;
     }
 }

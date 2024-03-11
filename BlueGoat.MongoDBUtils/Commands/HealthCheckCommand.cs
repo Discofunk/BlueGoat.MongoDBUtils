@@ -14,15 +14,16 @@ namespace BlueGoat.MongoDBUtils.Commands
             this.healthService = healthService;
             this.console = console;
             AddOption(MongoUtilOptions.DatabaseName);
-            this.SetHandler(HealthCheck, MongoUtilOptions.Connection, MongoUtilOptions.DatabaseName);
+            this.SetHandler((connection, databaseName) => HealthCheck(connection, databaseName), MongoUtilOptions.Connection, MongoUtilOptions.DatabaseName);
         }
 
-        private void HealthCheck(string connection, string databaseName)
+        private Result HealthCheck(string connection, string databaseName)
         {
             var stats = healthService.GetDbStats(connection, databaseName);
             var pretty = stats.ToJson(new JsonWriterSettings() { Indent = true });
             console.WriteLineOk($"Connected!");
             console.WriteLine(pretty);
+            return Result.Success;
         }
     }
 }

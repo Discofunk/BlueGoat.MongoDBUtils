@@ -17,18 +17,18 @@ public class DropDatabaseCommand : Command
             MongoUtilOptions.Connection, MongoUtilOptions.DatabaseName, MongoUtilOptions.ForceOption);
     }
 
-    internal bool DropDatabase(string connection, string databaseName, bool force)
+    internal Result DropDatabase(string connection, string databaseName, bool force)
     {
         if (!force)
         {
             console.WriteWarn($"Dropping database will permanently delete all data. Are you sure you want to continue? [Y]es / [N]o: ");
-            var response = Console.ReadLine()?.ToUpper();
-            if (response != "Y") return false;
+            var response = console.ReadLine()?.ToUpper();
+            if (response != "Y") return Result.Cancelled;
         }
 
         var client = clientFactory.GetClient(connection);
         client.DropDatabase(databaseName);
-        Console.WriteLine($"Database {databaseName} dropped");
-        return true;
+        console.WriteLine($"Database {databaseName} dropped");
+        return Result.Success;
     }
 }

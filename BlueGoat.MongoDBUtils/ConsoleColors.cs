@@ -77,6 +77,11 @@
             Console.Write(message);
             Console.ResetColor();
         }
+
+        public string? ReadLine()
+        {
+            return Console.ReadLine();
+        }
     }
 
 }

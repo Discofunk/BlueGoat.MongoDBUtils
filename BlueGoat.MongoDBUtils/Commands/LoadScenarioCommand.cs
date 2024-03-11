@@ -15,22 +15,25 @@ public class LoadScenarioCommand : Command
         AddOption(MongoUtilOptions.DatabaseName);
         AddOption(MongoUtilOptions.InFilePath);
         AddOption(MongoUtilOptions.ForceOption);
-        this.SetHandler(LoadScenario, MongoUtilOptions.Connection, MongoUtilOptions.DatabaseName, MongoUtilOptions.InFilePath, MongoUtilOptions.ForceOption);
+        this.SetHandler((connection, databaseName, filePath, force) => 
+            LoadScenario(connection, databaseName, filePath, force), 
+            MongoUtilOptions.Connection, MongoUtilOptions.DatabaseName, MongoUtilOptions.InFilePath, MongoUtilOptions.ForceOption
+        );
     }
 
-    private void LoadScenario(string connection, string databaseName, FileInfo filePath, bool force)
+    private Result LoadScenario(string connection, string databaseName, FileInfo filePath, bool force)
     {
         if (!filePath.Exists)
         {
             console.WriteLineError($"File {filePath} does not exist");
-            return;
+            return Result.Error;
         }
 
         if (!force && filePath.Length > Parameters.LargeFileSizeWarningThresholdBytes)
         {
             console.WriteWarn($"The selected file is larger than {Parameters.LargeFileSizeWarningThresholdInMegaBytes}MB and may result in long loading time or timeouts.  Continue? [Y]es / [N]o: ");
-            var response = Console.ReadLine()?.ToUpper();
-            if (response != "Y") return;
+            var response = console.ReadLine()?.ToUpper();
+            if (response != "Y") return Result.Cancelled;
         }
 
         var client = clientFactory.GetClient(connection);
@@ -49,15 +52,16 @@ public class LoadScenarioCommand : Command
                 if (collectionCount > 0)
                 {
                     console.WriteWarn($"Collection \"{collectionName}\" contains existing data. Delete existing data first? [Y]es / [N]o / [A]ll: ");
-                    var response = Console.ReadLine()?.ToUpper();
+                    var response = console.ReadLine()?.ToUpper();
                     if (response == "A")
                     {
                         force = true;
                     }
                     else if (response != "Y") continue;
+                    collection.DeleteMany(new BsonDocument());
                 }
             }
-            collection.DeleteMany(new BsonDocument());
+            
             if (data is BsonArray dataArray)
             {
                 if (dataArray.Count == 0) continue;
@@ -67,5 +71,6 @@ public class LoadScenarioCommand : Command
             }
         }
         console.WriteLineOk("Scenario Load Completed");
+        return Result.Success;
     }
 }
