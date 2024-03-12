@@ -20,6 +20,7 @@ public class SaveScenarioCommand : Command
         this.console = console;
         AddOption(MongoUtilOptions.DatabaseName);
         AddOption(MongoUtilOptions.OutFilePath);
+        AddOption(MongoUtilOptions.ForceOption);
         this.SetHandler((connection, databaseName, filePath, force) => 
             SaveScenario(connection, databaseName, filePath, force), 
             MongoUtilOptions.Connection, MongoUtilOptions.DatabaseName, MongoUtilOptions.OutFilePath, MongoUtilOptions.ForceOption
