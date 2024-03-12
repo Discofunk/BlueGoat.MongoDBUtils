@@ -41,7 +41,7 @@ namespace BlueGoat.MongoDBUtils.Test.Unit.Commands
         {
             //Arrange
             var numberOfRecords = 1000;
-            var data = CreateToDoData(numberOfRecords);
+            var data = ToDo.CreateToDoScenarioData(numberOfRecords);
             File.WriteAllText(loadScenarioFilePath, data.ToJson());
 
             client.GetDatabase(databaseName).Returns(database);
@@ -60,7 +60,7 @@ namespace BlueGoat.MongoDBUtils.Test.Unit.Commands
             //Assert
             database.Received(1).GetCollection<BsonDocument>(collectionName);
             collection.Received(1).EstimatedDocumentCount();
-            collection.DidNotReceive().DeleteMany(Arg.Any<FilterDefinition<BsonDocument>>());
+            collection.Received(1).DeleteMany(Arg.Any<FilterDefinition<BsonDocument>>());
             collection.Received(1).InsertMany(Arg.Any<List<BsonDocument>>());
             console.Outputs.Should().BeEquivalentTo(expectedOutput);
         }
@@ -72,7 +72,7 @@ namespace BlueGoat.MongoDBUtils.Test.Unit.Commands
         {
             //Arrange
             var numberOfRecords = 1000;
-            var data = CreateToDoData(numberOfRecords);
+            var data = ToDo.CreateToDoScenarioData(numberOfRecords);
             File.WriteAllText(loadScenarioFilePath, data.ToJson());
 
             client.GetDatabase(databaseName).Returns(database);
@@ -83,7 +83,7 @@ namespace BlueGoat.MongoDBUtils.Test.Unit.Commands
 
             var expectedOutput = new[]
             {
-                $"Collection \"{collectionName}\" contains existing data. Delete existing data first? [Y]es / [N]o / [A]ll: ",
+                $"Collection \"{collectionName}\" contains existing data. Delete existing data first? [Y]es / [N]o / [A]ll / [C]ancel: ",
                 $"Loaded {numberOfRecords} into \"ToDo\"",
                 $"Scenario Load Completed"
             };
@@ -100,11 +100,40 @@ namespace BlueGoat.MongoDBUtils.Test.Unit.Commands
         }
 
         [Fact]
-        public void Prompts_user_and_does_not_delete_existing_data__or_load_data_when_collection_has_data_and_user_cancels()
+        public void Deletes_existing_data_when_collection_has_data_with_force_option()
         {
             //Arrange
             var numberOfRecords = 1000;
-            var data = CreateToDoData(numberOfRecords);
+            var data = ToDo.CreateToDoScenarioData(numberOfRecords);
+            File.WriteAllText(loadScenarioFilePath, data.ToJson());
+
+            client.GetDatabase(databaseName).Returns(database);
+            database.GetCollection<BsonDocument>(nameof(ToDo)).Returns(collection);
+            collection.EstimatedDocumentCount().Returns(100);
+
+            var expectedOutput = new[]
+            {
+                $"Loaded {numberOfRecords} into \"ToDo\"",
+                $"Scenario Load Completed"
+            };
+
+            //Act
+            rootCommand.Parse($"scenario load -c mongodb://user:password@localhost:27017 -db {databaseName} -in {loadScenarioFilePath} --force").Invoke();
+
+            //Assert
+            database.Received(1).GetCollection<BsonDocument>(nameof(ToDo));
+            collection.DidNotReceive().EstimatedDocumentCount();
+            collection.Received(1).DeleteMany(Arg.Any<FilterDefinition<BsonDocument>>());
+            collection.Received(1).InsertMany(Arg.Any<List<BsonDocument>>());
+            console.Outputs.Should().BeEquivalentTo(expectedOutput);
+        }
+
+        [Fact]
+        public void Prompts_user_and_does_not_delete_existing_data_or_load_data_when_collection_has_data_and_user_cancels()
+        {
+            //Arrange
+            var numberOfRecords = 1000;
+            var data = ToDo.CreateToDoScenarioData(numberOfRecords);
             File.WriteAllText(loadScenarioFilePath, data.ToJson());
 
             client.GetDatabase(databaseName).Returns(database);
@@ -115,7 +144,7 @@ namespace BlueGoat.MongoDBUtils.Test.Unit.Commands
 
             var expectedOutput = new[]
             {
-                $"Collection \"{collectionName}\" contains existing data. Delete existing data first? [Y]es / [N]o / [A]ll: ",
+                $"Collection \"{collectionName}\" contains existing data. Delete existing data first? [Y]es / [N]o / [A]ll / [C]ancel: ",
                 $"Scenario Load Completed"
             };
 
@@ -156,7 +185,7 @@ namespace BlueGoat.MongoDBUtils.Test.Unit.Commands
         {
             //Arrange
             var numberOfRecords = 100000;
-            var data = CreateToDoData(numberOfRecords);
+            var data = ToDo.CreateToDoScenarioData(numberOfRecords);
             File.WriteAllText(loadScenarioFilePath, data.ToJson());
             
             console.AddNextInput("N");
@@ -182,7 +211,7 @@ namespace BlueGoat.MongoDBUtils.Test.Unit.Commands
         {
             //Arrange
             var numberOfRecords = 100000;
-            var data = CreateToDoData(numberOfRecords);
+            var data = ToDo.CreateToDoScenarioData(numberOfRecords);
             File.WriteAllText(loadScenarioFilePath, data.ToJson());
 
             client.GetDatabase(databaseName).Returns(database);
@@ -204,27 +233,10 @@ namespace BlueGoat.MongoDBUtils.Test.Unit.Commands
             //Assert
             database.Received(1).GetCollection<BsonDocument>(nameof(ToDo));
             collection.Received(1).EstimatedDocumentCount();
-            collection.DidNotReceive().DeleteMany(Arg.Any<FilterDefinition<BsonDocument>>());
+            collection.Received(1).DeleteMany(Arg.Any<FilterDefinition<BsonDocument>>());
             collection.Received(1).InsertMany(Arg.Any<List<BsonDocument>>());
             console.Outputs.Should().BeEquivalentTo(expectedOutput);
         }
-
-        private BsonDocument CreateToDoData(int size)
-        {
-            var root = new BsonDocument();
-            var data = Enumerable.Range(1, size).Select(x => new ToDo()
-            {
-                Id = Guid.NewGuid(),
-                Name = $"ToDo #{x}",
-                DueDate = DateTime.Now.AddDays(x),
-                IsCompleted = x % 2 == 0
-            }.ToBsonDocument());
-            var array = new BsonArray(data);
-            var e = new BsonElement("ToDo", array);
-            root.Add(e);
-            return root;
-        }
-
 
         public void Dispose()
         {
