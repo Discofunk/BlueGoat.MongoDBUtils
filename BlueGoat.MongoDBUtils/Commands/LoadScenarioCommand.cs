@@ -51,17 +51,17 @@ public class LoadScenarioCommand : Command
                 var collectionCount = collection.EstimatedDocumentCount();
                 if (collectionCount > 0)
                 {
-                    console.WriteWarn($"Collection \"{collectionName}\" contains existing data. Delete existing data first? [Y]es / [N]o / [A]ll: ");
+                    console.WriteWarn($"Collection \"{collectionName}\" contains existing data. Delete existing data first? [Y]es / [N]o / [A]ll / [C]ancel: ");
                     var response = console.ReadLine()?.ToUpper();
                     if (response == "A")
                     {
                         force = true;
                     }
+                    else if (response == "C") return Result.Cancelled;
                     else if (response != "Y") continue;
-                    collection.DeleteMany(new BsonDocument());
                 }
             }
-            
+            collection.DeleteMany(new BsonDocument());
             if (data is BsonArray dataArray)
             {
                 if (dataArray.Count == 0) continue;
