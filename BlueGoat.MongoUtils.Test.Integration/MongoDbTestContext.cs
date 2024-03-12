@@ -1,6 +1,9 @@
-﻿using MongoDB.Driver;
+﻿using BlueGoat.MongoDBUtils;
+using BlueGoat.MongoDBUtils.Commands;
+using MongoDB.Driver;
 using Testcontainers.MongoDb;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace BlueGoat.MongoUtils.Test.Integration
 {
@@ -11,6 +14,11 @@ namespace BlueGoat.MongoUtils.Test.Integration
 
         public string ConnectionString => mongoDbContainer.GetConnectionString();
         public IMongoClient Client => new MongoClient(ConnectionString);
+
+        public MongoUtilsRootCommand GetRootCommand(ITestOutputHelper output)
+        {
+            return new MongoUtilsRootCommand(new MongoClientProvider(), new MigrationRunner(), new TestConsole(output));
+        }
 
         public Task InitializeAsync() => mongoDbContainer.StartAsync();
 

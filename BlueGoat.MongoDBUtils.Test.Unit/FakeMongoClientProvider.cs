@@ -2,11 +2,11 @@
 
 namespace BlueGoat.MongoDBUtils.Test.Unit
 {
-    internal class FakeMongoClientFactory : IMongoClientFactory
+    internal class FakeMongoClientProvider : IMongoClientProvider
     {
         private readonly IMongoClient client;
 
-        public FakeMongoClientFactory(IMongoClient client)
+        public FakeMongoClientProvider(IMongoClient client)
         {
             this.client = client;
         }
