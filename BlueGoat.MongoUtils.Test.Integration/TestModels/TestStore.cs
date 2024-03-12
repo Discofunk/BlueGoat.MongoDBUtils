@@ -25,7 +25,7 @@ namespace BlueGoat.MongoUtils.Test.Integration.TestModels
             });
         }
 
-        public async Task InsertData(int count)
+        public async Task InsertDataAsync(int count)
         {
             var users = Enumerable.Range(0, count).Select(i => User.CreateFromFullName(Names.GetRandomName())).ToArray();
             await userCollection.Value.InsertManyAsync(users);
@@ -33,7 +33,7 @@ namespace BlueGoat.MongoUtils.Test.Integration.TestModels
             await toDoCollection.Value.InsertManyAsync(toDos);
         }
 
-        public async Task SaveData(int count, string filePath)
+        public async Task SaveDataAsync(int count, string filePath)
         {
             var users = Enumerable.Range(0, count).Select(i => User.CreateFromFullName(Names.GetRandomName())).ToArray();
             var toDos = Enumerable.Range(0, count).Select(i => ToDo.CreateToDo(i, users[i])).ToArray();

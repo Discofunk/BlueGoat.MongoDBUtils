@@ -131,8 +131,6 @@ namespace BlueGoat.MongoDBUtils.Test.Unit.Commands
             var existingData = ToDo.CreateToDoScenarioData(100).ToArray();
             File.WriteAllText(saveScenarioFilePath, existingData.ToJson());
 
-            console.AddNextInput("Y");
-
             var data = ToDo.CreateData(100).ToArray();
             var healthCheckMessage = """
                 {
@@ -152,7 +150,6 @@ namespace BlueGoat.MongoDBUtils.Test.Unit.Commands
             var expectedOutput = new[]
             {
                 "Save Scenario Started",
-                $"File {saveScenarioFilePath} already exists. Overwrite? [Y]es /[N]o: ",
                 "Scenario Saved",
                 saveScenarioFilePath
             };
