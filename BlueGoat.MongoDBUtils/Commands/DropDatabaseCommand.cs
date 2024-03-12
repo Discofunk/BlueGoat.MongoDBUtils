@@ -4,12 +4,12 @@ namespace BlueGoat.MongoDBUtils.Commands;
 
 public class DropDatabaseCommand : Command
 {
-    private readonly IMongoClientFactory clientFactory;
+    private readonly IMongoClientProvider clientProvider;
     private readonly IConsole console;
 
-    public DropDatabaseCommand(IMongoClientFactory clientFactory, IConsole console) : base("drop", "Drop a MongoDB database")
+    public DropDatabaseCommand(IMongoClientProvider clientProvider, IConsole console) : base("drop", "Drop a MongoDB database")
     {
-        this.clientFactory = clientFactory;
+        this.clientProvider = clientProvider;
         this.console = console;
         AddOption(MongoUtilOptions.DatabaseName);
         AddOption(MongoUtilOptions.ForceOption);
@@ -26,7 +26,7 @@ public class DropDatabaseCommand : Command
             if (response != "Y") return Result.Cancelled;
         }
 
-        var client = clientFactory.GetClient(connection);
+        var client = clientProvider.GetClient(connection);
         client.DropDatabase(databaseName);
         console.WriteLine($"Database {databaseName} dropped");
         return Result.Success;

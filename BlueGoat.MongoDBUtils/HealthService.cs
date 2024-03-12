@@ -5,19 +5,19 @@ namespace BlueGoat.MongoDBUtils
 {
     public class HealthService
     {
-        private readonly IMongoClientFactory clientFactory;
+        private readonly IMongoClientProvider clientProvider;
         internal static JsonCommand<BsonDocument> DbHealthCheckCommand = new("{ dbStats: 1}");
 
-        public HealthService(IMongoClientFactory clientFactory)
+        public HealthService(IMongoClientProvider clientProvider)
         {
-            this.clientFactory = clientFactory;
+            this.clientProvider = clientProvider;
         }
 
         public IDictionary<string,object> GetDbStats(string connection, string databaseName)
         {
             try
             {
-                var client = clientFactory.GetClient(connection);
+                var client = clientProvider.GetClient(connection);
                 var db = client.GetDatabase(databaseName);
                 var stats = db.RunCommand(DbHealthCheckCommand);
                 return stats.ToDictionary();

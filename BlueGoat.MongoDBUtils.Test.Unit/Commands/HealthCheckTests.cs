@@ -24,7 +24,7 @@ namespace BlueGoat.MongoDBUtils.Test.Unit.Commands
             client = Substitute.For<IMongoClient>();
             database = Substitute.For<IMongoDatabase>();
             console = new TestConsole(output);
-            rootCommand = new MongoUtilsRootCommand(new FakeMongoClientFactory(client), migrationRunner, console);
+            rootCommand = new MongoUtilsRootCommand(new FakeMongoClientProvider(client), migrationRunner, console);
         }
 
         [Fact]

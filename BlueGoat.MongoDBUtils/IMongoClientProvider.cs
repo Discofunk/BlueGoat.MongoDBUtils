@@ -2,12 +2,12 @@
 
 namespace BlueGoat.MongoDBUtils
 {
-    public interface IMongoClientFactory
+    public interface IMongoClientProvider
     {
         IMongoClient GetClient(string connectionString);
     }
 
-    public class MongoClientFactory : IMongoClientFactory
+    public class MongoClientProvider : IMongoClientProvider
     {
         public IMongoClient GetClient(string connectionString)
         {

@@ -5,12 +5,12 @@ namespace BlueGoat.MongoDBUtils.Commands;
 
 public class LoadScenarioCommand : Command
 {
-    private readonly IMongoClientFactory clientFactory;
+    private readonly IMongoClientProvider clientProvider;
     private readonly IConsole console;
 
-    public LoadScenarioCommand(IMongoClientFactory clientFactory, IConsole console) : base("load", "Load scenario from disk")
+    public LoadScenarioCommand(IMongoClientProvider clientProvider, IConsole console) : base("load", "Load scenario from disk")
     {
-        this.clientFactory = clientFactory;
+        this.clientProvider = clientProvider;
         this.console = console;
         AddOption(MongoUtilOptions.DatabaseName);
         AddOption(MongoUtilOptions.InFilePath);
@@ -36,7 +36,7 @@ public class LoadScenarioCommand : Command
             if (response != "Y") return Result.Cancelled;
         }
 
-        var client = clientFactory.GetClient(connection);
+        var client = clientProvider.GetClient(connection);
 
         var db = client.GetDatabase(databaseName);
         var rawBsonAsJson = File.ReadAllText(filePath.FullName);

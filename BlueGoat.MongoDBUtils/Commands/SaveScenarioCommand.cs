@@ -9,13 +9,13 @@ namespace BlueGoat.MongoDBUtils.Commands;
 
 public class SaveScenarioCommand : Command
 {
-    private readonly IMongoClientFactory clientFactory;
+    private readonly IMongoClientProvider clientProvider;
     private readonly HealthService healthService;
     private readonly IConsole console;
 
-    public SaveScenarioCommand(IMongoClientFactory clientFactory, HealthService healthService, IConsole console) : base("save", "Export current DB state as a scenario to disk")
+    public SaveScenarioCommand(IMongoClientProvider clientProvider, HealthService healthService, IConsole console) : base("save", "Export current DB state as a scenario to disk")
     {
-        this.clientFactory = clientFactory;
+        this.clientProvider = clientProvider;
         this.healthService = healthService;
         this.console = console;
         AddOption(MongoUtilOptions.DatabaseName);
@@ -46,7 +46,7 @@ public class SaveScenarioCommand : Command
             filePath.Delete();
         }
 
-        var client = clientFactory.GetClient(connection);
+        var client = clientProvider.GetClient(connection);
         var db = client.GetDatabase(databaseName);
         var options = new ListCollectionNamesOptions()
         {
