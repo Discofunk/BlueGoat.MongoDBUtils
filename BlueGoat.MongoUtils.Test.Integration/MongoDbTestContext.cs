@@ -15,9 +15,12 @@ namespace BlueGoat.MongoUtils.Test.Integration
         public string ConnectionString => mongoDbContainer.GetConnectionString();
         public IMongoClient Client => new MongoClient(ConnectionString);
 
+        public TestConsole Console { get; private set; }
+
         public MongoUtilsRootCommand GetRootCommand(ITestOutputHelper output)
         {
-            return new MongoUtilsRootCommand(new MongoClientProvider(), new MigrationRunner(), new TestConsole(output));
+            Console = new TestConsole(output);
+            return new MongoUtilsRootCommand(new MongoClientProvider(), new MigrationRunner(), Console);
         }
 
         public Task InitializeAsync() => mongoDbContainer.StartAsync();
