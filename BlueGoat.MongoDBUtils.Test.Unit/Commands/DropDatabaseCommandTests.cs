@@ -1,7 +1,6 @@
 ﻿using BlueGoat.MongoDBUtils.Commands;
 using MongoDB.Driver;
 using NSubstitute;
-using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.Parsing;
 using FluentAssertions;
