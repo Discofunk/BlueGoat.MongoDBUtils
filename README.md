@@ -7,7 +7,7 @@ This .NET Tool provides some utilities that can be useful during a project's dev
 - Running a [MongoDBMigrations](https://bitbucket.org/i_am_a_kernel/mongodbmigrations) migration
 - Saving/Loading scenario data
 
-As testing aid, you can save the current state of the DB as a scenario JSON file and load it back in again. This is useful for quickly testing against various data states.
+As testing aid, you can save the current state of the DB as a scenario JSON file and load it back in again. This is useful for quickly testing against various data states and sharing data states with the team.
 
 > ⚠ Warning: This is not intended as a way to back up / restore large amounts of data but rather manage various light-weight scenarios for a small amount of data. The scenario commands will attempt to dump / restore the entire DB using an inefficient JSON file format.
 
@@ -16,6 +16,18 @@ This is a work in progress and has not had any production exposure but I thought
 ### Thanks
 
 This utility uses the excellent MongoDBMigrations project - https://bitbucket.org/i_am_a_kernel/mongodbmigrations
+
+### Current Version and Dependency Versions
+
+Mongo Utils (this): `0.0.8`
+MongoDBMigrations: `2.2.0`
+MongoDB.Driver: `2.24.0`
+
+Release Notes: https://github.com/Discofunk/BlueGoat.MongoDBUtils/releases
+
+### Limitations
+
+Currently dependencies are packaged with this utility at a specific version which may cause issues if you are using an older MongoDBMigrations version or your MongoDB database is not compatible with the current driver being used.
 
 ### Installing Mongo Utils Tool
 
@@ -40,7 +52,7 @@ dotnet tool install --local BlueGoat.MongoUtils --version 0.0.3
 
 Verify install by running `dotnet mongo-utils -?`
 
-> Note: Local installation must use the `dotnet` command first
+> Note: Local installations must prefix with the `dotnet` command to run
 
 ### Help
 
@@ -78,32 +90,38 @@ Commands:
 mongo-utils migrate -c mongodb://root:BlueGoatsFlyFaster@localhost:27017 -db "MyMongoDB" -ma  .\MongoDb.Migrations.dll
 ```
 
+#### Run Migration To Given Version Example
+
+```console
+mongo-utils migrate -c mongodb://root:BlueGoatsFlyFaster@localhost:27017 -db "MyMongoDB" -ma  .\MongoDb.Migrations.dll --version 1.0.2
+```
+
 #### Drop a MongoDB database example
 
 ```console
-dotnet mongo-utils drop -c mongodb://root:BlueGoatsFlyFaster@localhost:27017 -db "MyMongoDB"
+mongo-utils drop -c mongodb://root:BlueGoatsFlyFaster@localhost:27017 -db "MyMongoDB"
 ```
 
 #### Drop database and run all migrations
 
 ```console
- dotnet mongo-utils reset -c mongodb://root:BlueGoatsFlyFaster@localhost:27017 -db "MyMongoDB" -ma  .\MongoDb.Migrations.dll
+ mongo-utils reset -c mongodb://root:BlueGoatsFlyFaster@localhost:27017 -db "MyMongoDB" -ma  .\MongoDb.Migrations.dll
 ```
 
 #### Run a Health Check agaisnt a MongoDB Database example
 
 ```console
-dotnet mongo-utils health -c mongodb://root:BlueGoatsFlyFaster@localhost:27017 -db "MyMongoDB"
+mongo-utils health -c mongodb://root:BlueGoatsFlyFaster@localhost:27017 -db "MyMongoDB"
 ```
 
 #### Save the current DB state into a Scenario file example
 
 ```console
-dotnet mongo-utils scenario save -c mongodb://root:BlueGoatsFlyFaster@localhost:27017 -db "MyMongoDB" --out .\ModelData\BasicScenario.json
+mongo-utils scenario save -c mongodb://root:BlueGoatsFlyFaster@localhost:27017 -db "MyMongoDB" --out .\ModelData\BasicScenario.json
 ```
 
 #### Load a saved scenario back into the DB example
 
 ```console
-dotnet mongo-utils scenario load -c mongodb://root:BlueGoatsFlyFaster@localhost:27017 -db "MyMongoDB" --in .\ModelData\BasicScenario.json
+mongo-utils scenario load -c mongodb://root:BlueGoatsFlyFaster@localhost:27017 -db "MyMongoDB" --in .\ModelData\BasicScenario.json
 ```
