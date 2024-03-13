@@ -1,4 +1,4 @@
-# BlueGoat Mongo Utils - test
+# BlueGoat Mongo Utils
 
 This .NET Tool provides some utilities that can be useful during a project's development phase when working with MongoDB and can do the following:
 
