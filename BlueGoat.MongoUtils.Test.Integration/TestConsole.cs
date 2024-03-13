@@ -21,53 +21,54 @@ namespace BlueGoat.MongoUtils.Test.Integration
             inputs.Enqueue(input);
         }
 
-        public void WriteLine(string message)
+        public void WriteLine(string? message)
         {
+            if (message == null) return;
             outputs.Enqueue(message);
             output.WriteLine(message);
         }
 
-        public void WriteLineOk(string message)
+        public void WriteLineOk(string? message)
         {
             WriteLine(message);
         }
 
-        public void WriteLineInfo(string message)
+        public void WriteLineInfo(string? message)
         {
             WriteLine(message);
         }
 
-        public void WriteLineError(string message)
+        public void WriteLineError(string? message)
         {
             WriteLine(message);
         }
 
-        public void WriteLineWarn(string message)
+        public void WriteLineWarn(string? message)
         {
             WriteLine(message);
         }
 
-        public void Write(string message)
+        public void Write(string? message)
         {
             WriteLine(message);
         }
 
-        public void WriteOk(string message)
+        public void WriteOk(string? message)
         {
             WriteLine(message);
         }
 
-        public void WriteInfo(string message)
+        public void WriteInfo(string? message)
         {
             WriteLine(message);
         }
 
-        public void WriteError(string message)
+        public void WriteError(string? message)
         {
             WriteLine(message);
         }
 
-        public void WriteWarn(string message)
+        public void WriteWarn(string? message)
         {
             WriteLine(message);
         }

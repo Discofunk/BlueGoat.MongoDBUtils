@@ -15,7 +15,7 @@ namespace BlueGoat.MongoUtils.Test.Integration.Commands
         private readonly IMongoClient client;
         private readonly string connectionString;
         private readonly MongoUtilsRootCommand rootCommand;
-        private readonly TestConsole console;
+        private readonly TestConsole? console;
 
         public HealthCheckCommandTests(MongoDbTestContext context, ITestOutputHelper output)
         {
@@ -53,8 +53,8 @@ namespace BlueGoat.MongoUtils.Test.Integration.Commands
             output.WriteLine("Time: " + time);
 
             //Assert
-            console.Outputs.Should().HaveCount(2);
-            var stats = console.Outputs[1];
+            console?.Outputs.Should().HaveCount(2);
+            var stats = console?.Outputs[1];
             stats.Should().Contain($"\"db\" : \"{databaseName}\"");
         }
     }

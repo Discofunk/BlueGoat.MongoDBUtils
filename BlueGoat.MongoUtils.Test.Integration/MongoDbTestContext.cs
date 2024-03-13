@@ -15,7 +15,7 @@ namespace BlueGoat.MongoUtils.Test.Integration
         public string ConnectionString => mongoDbContainer.GetConnectionString();
         public IMongoClient Client => new MongoClient(ConnectionString);
 
-        public TestConsole Console { get; private set; }
+        public TestConsole? Console { get; private set; }
 
         public MongoUtilsRootCommand GetRootCommand(ITestOutputHelper output)
         {
