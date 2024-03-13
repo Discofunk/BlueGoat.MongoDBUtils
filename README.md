@@ -19,7 +19,7 @@ This utility uses the excellent MongoDBMigrations project - https://bitbucket.or
 
 ### Current Version and Dependency Versions
 
-Mongo Utils (this): `0.0.8`
+Mongo Utils (this): `0.0.9`
 MongoDBMigrations: `2.2.0`
 MongoDB.Driver: `2.24.0`
 
