@@ -7,7 +7,7 @@ This .NET Tool provides some utilities that can be useful during a project's dev
 - Running a [MongoDBMigrations](https://bitbucket.org/i_am_a_kernel/mongodbmigrations) migration
 - Saving/Loading scenario data
 
-As testing aid, you can save the current state of the DB as a scenario JSON file and load it back in again. This is useful for quickly testing against various data states and sharing data states with the team.
+As a testing aid, you can save the current state of the DB as a scenario JSON file and load it back in again. This is useful for quickly testing against various data states and sharing data states with the team.
 
 > ⚠ Warning: This is not intended as a way to back up / restore large amounts of data but rather manage various light-weight scenarios for a small amount of data. The scenario commands will attempt to dump / restore the entire DB using an inefficient JSON file format.
 
