@@ -1,5 +1,7 @@
 ﻿using System.CommandLine;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Bson.Serialization;
 
 namespace BlueGoat.MongoDBUtils.Commands;
 
@@ -15,13 +17,15 @@ public class LoadScenarioCommand : Command
         AddOption(MongoUtilOptions.DatabaseName);
         AddOption(MongoUtilOptions.InFilePath);
         AddOption(MongoUtilOptions.ForceOption);
-        this.SetHandler((connection, databaseName, filePath, force) => 
-            LoadScenario(connection, databaseName, filePath, force), 
-            MongoUtilOptions.Connection, MongoUtilOptions.DatabaseName, MongoUtilOptions.InFilePath, MongoUtilOptions.ForceOption
+        AddOption(MongoUtilOptions.GuidRepresentation);
+        AddOption(MongoUtilOptions.GuidMode);
+        this.SetHandler((connection, databaseName, filePath, force, guidRepresentation, guidMode) => 
+            LoadScenario(connection, databaseName, filePath, force, guidRepresentation, guidMode), 
+            MongoUtilOptions.Connection, MongoUtilOptions.DatabaseName, MongoUtilOptions.InFilePath, MongoUtilOptions.ForceOption, MongoUtilOptions.GuidRepresentation, MongoUtilOptions.GuidMode
         );
     }
 
-    private Result LoadScenario(string connection, string databaseName, FileInfo filePath, bool force)
+    private Result LoadScenario(string connection, string databaseName, FileInfo filePath, bool force, GuidRepresentation? guidRepresentation, GuidRepresentationMode? guidMode)
     {
         if (!filePath.Exists)
         {
@@ -34,6 +38,17 @@ public class LoadScenarioCommand : Command
             console.WriteWarn($"The selected file is larger than {Parameters.LargeFileSizeWarningThresholdInMegaBytes}MB and may result in long loading time or timeouts.  Continue? [Y]es / [N]o: ");
             var response = console.ReadLine()?.ToUpper();
             if (response != "Y") return Result.Cancelled;
+        }
+
+        if (guidMode != null)
+        {
+#pragma warning disable CS0618
+            BsonDefaults.GuidRepresentationMode = guidMode.Value;
+#pragma warning restore CS0618
+        }
+        if (guidRepresentation != null)
+        {
+            BsonSerializer.RegisterSerializer(new GuidSerializer(guidRepresentation.Value));
         }
 
         var client = clientProvider.GetClient(connection);

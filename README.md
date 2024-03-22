@@ -19,7 +19,7 @@ This utility uses the excellent MongoDBMigrations project - https://bitbucket.or
 
 ### Current Version and Dependency Versions
 
-Mongo Utils (this): `0.0.9`
+Mongo Utils (this): `0.0.10`
 MongoDBMigrations: `2.2.0`
 MongoDB.Driver: `2.24.0`
 
@@ -28,6 +28,16 @@ Release Notes: https://github.com/Discofunk/BlueGoat.MongoDBUtils/releases
 ### Limitations
 
 Currently dependencies are packaged with this utility at a specific version which may cause issues if you are using an older MongoDBMigrations version or your MongoDB database is not compatible with the current driver being used.
+
+### What's New?
+
+Added option to select MongoDB `GuidRepresentationMode` and `GuidRepresentation` when loading & saving scenario data to maintain expected format after loading. For more information see https://www.mongodb.com/docs/drivers/csharp/current/fundamentals/serialization/guid-serialization/
+
+Examples:
+
+```console
+mongo-utils scenario load -c mongodb://root:BlueGoatsFlyFaster@localhost:27017 -db "MyMongoDB" --in .\ModelData\BasicScenario.json --guid-mode V3
+```
 
 ### Installing Mongo Utils Tool
 
@@ -124,4 +134,16 @@ mongo-utils scenario save -c mongodb://root:BlueGoatsFlyFaster@localhost:27017 -
 
 ```console
 mongo-utils scenario load -c mongodb://root:BlueGoatsFlyFaster@localhost:27017 -db "MyMongoDB" --in .\ModelData\BasicScenario.json
+```
+
+#### Save the current DB state into a Scenario file with selected Guid Mode example
+
+```console
+mongo-utils scenario save -c mongodb://root:BlueGoatsFlyFaster@localhost:27017 -db "MyMongoDB" --out .\ModelData\BasicScenario.json --guid-mode V3
+```
+
+#### Load a saved scenario back into the DB with selected Guid Mode example
+
+```console
+mongo-utils scenario load -c mongodb://root:BlueGoatsFlyFaster@localhost:27017 -db "MyMongoDB" --in .\ModelData\BasicScenario.json --guid-mode V3
 ```
