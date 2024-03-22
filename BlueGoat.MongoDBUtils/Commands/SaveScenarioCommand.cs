@@ -1,9 +1,9 @@
 ﻿using System.CommandLine;
-using System.Resources;
 using MongoDB.Bson;
 using MongoDB.Bson.IO;
+using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
-using SharpCompress.Common;
 
 namespace BlueGoat.MongoDBUtils.Commands;
 
@@ -21,15 +21,28 @@ public class SaveScenarioCommand : Command
         AddOption(MongoUtilOptions.DatabaseName);
         AddOption(MongoUtilOptions.OutFilePath);
         AddOption(MongoUtilOptions.ForceOption);
-        this.SetHandler((connection, databaseName, filePath, force) => 
-            SaveScenario(connection, databaseName, filePath, force), 
-            MongoUtilOptions.Connection, MongoUtilOptions.DatabaseName, MongoUtilOptions.OutFilePath, MongoUtilOptions.ForceOption
+        AddOption(MongoUtilOptions.GuidRepresentation);
+        AddOption(MongoUtilOptions.GuidMode);
+        this.SetHandler((connection, databaseName, filePath, force, guidRepresentation, guidMode) => 
+            SaveScenario(connection, databaseName, filePath, force, guidRepresentation, guidMode), 
+            MongoUtilOptions.Connection, MongoUtilOptions.DatabaseName, MongoUtilOptions.OutFilePath, MongoUtilOptions.ForceOption, MongoUtilOptions.GuidRepresentation, MongoUtilOptions.GuidMode
         );
     }
 
-    private Result SaveScenario(string connection, string databaseName, FileInfo filePath, bool force)
+    private Result SaveScenario(string connection, string databaseName, FileInfo filePath, bool force, GuidRepresentation? guidRepresentation, GuidRepresentationMode? guidMode)
     {
         console.WriteLine("Save Scenario Started");
+
+        if (guidMode != null)
+        {
+#pragma warning disable CS0618
+            BsonDefaults.GuidRepresentationMode = guidMode.Value;
+#pragma warning restore CS0618
+        }
+        if (guidRepresentation != null)
+        {
+            BsonSerializer.RegisterSerializer(new GuidSerializer(guidRepresentation.Value));
+        }
 
         var dbSize = healthService.GetSize(connection, databaseName);
         if (!force && dbSize > Parameters.LargeFileSizeWarningThresholdBytes)
@@ -44,8 +57,8 @@ public class SaveScenarioCommand : Command
             console.WriteWarn($"File {filePath} already exists. Overwrite? [Y]es /[N]o: ");
             var overWriteInput = console.ReadLine()?.ToUpper();
             if (overWriteInput != "Y") return Result.Cancelled;
-            filePath.Delete();
         }
+        filePath.Delete();
 
         var client = clientProvider.GetClient(connection);
         var db = client.GetDatabase(databaseName);
@@ -66,7 +79,7 @@ public class SaveScenarioCommand : Command
 
         filePath.Directory?.Create();
         var json = root.ToJson(new JsonWriterSettings() { Indent = true, OutputMode = JsonOutputMode.Shell });
-        using (var fileStream = filePath.Open(FileMode.OpenOrCreate, FileAccess.Write))
+        using (var fileStream = filePath.Open(FileMode.CreateNew, FileAccess.Write))
         {
             using (var sw = new StreamWriter(fileStream))
             {

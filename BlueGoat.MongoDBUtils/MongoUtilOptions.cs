@@ -1,4 +1,5 @@
 ﻿using System.CommandLine;
+using MongoDB.Bson;
 
 namespace BlueGoat.MongoDBUtils
 {
@@ -11,6 +12,10 @@ namespace BlueGoat.MongoDBUtils
         internal static Option<FileInfo> InFilePath = new Option<FileInfo>("--in", description: "Input File Path") { IsRequired = true };
         internal static Option<bool> ForceOption = new Option<bool>("--force", description: "Skip Prompts");
         internal static Option<FileInfo> MigrationAssembly = new Option<FileInfo>("--migration-assembly") { IsRequired = true};
+        internal static Option<GuidRepresentation?> GuidRepresentation = new Option<GuidRepresentation?>("--guid", 
+            description: "Sets the desired MongoDB Guid Representation") { IsRequired = false };
+        internal static Option<GuidRepresentationMode?> GuidMode = new Option<GuidRepresentationMode?>("--guid-mode", 
+            description: "Sets the desired MongoDB Guid Representation Mode") { IsRequired = false};
 
         static MongoUtilOptions()
         {
